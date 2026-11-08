@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Trilha do Enrico</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#1f3a5f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Enrico">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap">
+<style>
+:root{
+  --bg:#eef2f7; --card:#ffffff; --fg:#1d2733; --muted:#4f5c6b; --line:#cfd8e3;
+  --red:#c92f37; --navy:#1f3a5f; --gold:#f2b632; --on-gold:#1d2733; --green:#23744b; --on-accent:#ffffff;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121a24; --card:#1b2634; --fg:#eef3f8; --muted:#b4c0cd; --line:#33445a;
+    --red:#ff7b80; --navy:#9dc0ee; --gold:#ffd166; --on-gold:#1d2733; --green:#7fdcaa; --on-accent:#0e1620;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121a24; --card:#1b2634; --fg:#eef3f8; --muted:#b4c0cd; --line:#33445a;
+  --red:#ff7b80; --navy:#9dc0ee; --gold:#ffd166; --on-gold:#1d2733; --green:#7fdcaa; --on-accent:#0e1620;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:Nunito,system-ui,-apple-system,"Segoe UI",sans-serif; font-size:18px; line-height:1.5;
+  padding-top:16px; padding-bottom:24px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.wrap{max-width:480px;margin:0 auto;display:grid;gap:14px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+h1{font-size:1.6rem;font-weight:800;margin:0;text-wrap:balance}
+h2{font-size:1.1rem;margin:6px 0 0}
+.pill{font-size:.9rem;font-weight:700;padding:4px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.off{color:var(--red);border-color:var(--red)}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px 16px;display:grid;justify-items:center;gap:14px;min-width:0}
+#enrico{width:min(190px,62vw);height:auto;max-width:100%;animation:bob 3.2s ease-in-out infinite}
+.bubble{margin:0;width:100%;min-height:4.4em;background:var(--bg);border-radius:18px;padding:12px 14px;font-size:1.2rem;font-weight:700;text-wrap:pretty;overflow-wrap:anywhere}
+.w{border-radius:6px;padding:0 2px;transition:background .15s}
+.w.on{background:var(--gold);color:var(--on-gold)}
+.story .w{cursor:pointer}
+.w:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+button{font:inherit;font-weight:800;min-height:56px;padding:0 16px;border:0;border-radius:16px;background:var(--navy);color:var(--on-accent);cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.ghost{background:transparent;color:var(--fg);border:2px solid var(--line);min-height:48px}
+button.danger{background:var(--red);color:var(--on-accent)}
+.btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%}
+.btns button:last-child{grid-column:1/-1}
+.btns2{display:flex;flex-wrap:wrap;gap:10px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;display:grid;gap:12px;min-width:0}
+.note{margin:0;font-size:.95rem;color:var(--muted)}
+.log{display:grid;gap:8px;max-height:44vh;overflow-y:auto;min-width:0}
+.msg{max-width:88%;padding:10px 14px;border-radius:16px;overflow-wrap:anywhere}
+.msg.child{justify-self:end;background:var(--red);color:var(--on-accent)}
+.msg.bot{justify-self:start;background:var(--bg)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:6px 12px;border-radius:999px;background:var(--bg);color:var(--fg);border:1px solid var(--line);font-size:1rem;font-weight:700}
+.row{display:flex;gap:8px;min-width:0}
+input[type=text]{flex:1;min-width:0;min-height:52px;font:inherit;font-size:1.1rem;padding:0 12px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.story{margin:0;font-size:1.5rem;line-height:1.9;text-wrap:pretty}
+.gate{display:grid;gap:10px}
+.hold{position:relative;overflow:hidden;background:var(--bg);color:var(--fg);border:2px solid var(--line);width:100%}
+.hold i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--green);opacity:.4}
+.hold span{position:relative}
+.setting{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:52px}
+.setting input{width:26px;height:26px;flex:none;accent-color:var(--green)}
+.setting input:disabled{opacity:.4}
+select{font:inherit;min-height:44px;padding:0 10px;border-radius:12px;background:var(--bg);color:var(--fg);border:1px solid var(--line)}
+.qs{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.qs li{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--bg);border-radius:14px;padding:10px 12px;min-width:0}
+.qs li span{overflow-wrap:anywhere}
+.qs button{min-height:44px;font-size:.95rem;padding:0 12px}
+.dump{width:100%;min-height:120px;font:inherit;font-size:.9rem;border-radius:12px;padding:8px;background:var(--bg);color:var(--fg);border:1px solid var(--line)}
+.alert{background:var(--red);color:var(--on-accent);border-radius:20px;padding:16px;display:grid;gap:8px}
+.alert ul{margin:0;padding-left:20px}
+.alert button{background:var(--on-accent);color:var(--red)}
+.open,.smile{transform-box:fill-box;transform-origin:center}
+.open{opacity:0}
+.talking .open{opacity:1;animation:mouth .28s ease-in-out infinite alternate}
+.talking .smile{opacity:0}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
+@keyframes mouth{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+@keyframes bob{50%{transform:translateY(-5px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Trilha do Enrico</h1>
+    <span id="net" class="pill">Online</span>
+  </header>
+
+  <section class="stage" aria-label="Enrico, o assistente">
+    <svg id="enrico" viewBox="0 0 200 230" role="img" aria-label="Enrico">
+      <rect x="54" y="152" width="92" height="70" rx="30" fill="#c92f37"/>
+      <rect x="66" y="200" width="30" height="26" rx="10" fill="#1f3a5f"/>
+      <rect x="104" y="200" width="30" height="26" rx="10" fill="#1f3a5f"/>
+      <circle cx="48" cy="98" r="11" fill="#b7774a"/>
+      <circle cx="152" cy="98" r="11" fill="#b7774a"/>
+      <circle cx="100" cy="98" r="58" fill="#b7774a"/>
+      <g fill="#2b1a12">
+        <circle cx="60" cy="58" r="20"/><circle cx="88" cy="42" r="22"/>
+        <circle cx="116" cy="42" r="22"/><circle cx="140" cy="58" r="20"/><circle cx="100" cy="38" r="20"/>
+      </g>
+      <circle class="eye" cx="78" cy="100" r="7" fill="#2b1a12"/>
+      <circle class="eye" cx="122" cy="100" r="7" fill="#2b1a12"/>
+      <circle cx="80" cy="98" r="2.2" fill="#ffffff"/>
+      <circle cx="124" cy="98" r="2.2" fill="#ffffff"/>
+      <ellipse cx="66" cy="120" rx="8" ry="5" fill="#e0606a" opacity=".45"/>
+      <ellipse cx="134" cy="120" rx="8" ry="5" fill="#e0606a" opacity=".45"/>
+      <path class="smile" d="M84 124 Q100 138 116 124" fill="none" stroke="#2b1a12" stroke-width="4" stroke-linecap="round"/>
+      <ellipse class="open" cx="100" cy="129" rx="11" ry="8" fill="#7a1f2b"/>
+    </svg>
+    <p id="bubble" class="bubble" aria-live="polite"></p>
+    <div class="btns">
+      <button id="b-listen" type="button">Ouvir</button>
+      <button id="b-chat" type="button">Conversar</button>
+      <button id="b-read" type="button">Ler comigo</button>
+    </div>
+    <button id="b-parents" class="ghost" type="button">Área dos pais</button>
+  </section>
+
+  <section id="alert" class="alert" hidden>
+    <b>Conte agora para um adulto de confiança.</b>
+    <p style="margin:0">Você não está em apuros por contar. Chame a mamãe, o papai ou outro adulto que está perto de você.</p>
+    <p style="margin:0">Números para ligar (anote e ligue pelo telefone):</p>
+    <ul>
+      <li>190 — Polícia</li>
+      <li>192 — Samu</li>
+      <li>100 — Disque Direitos Humanos (também recebe denúncias de violência contra crianças)</li>
+      <li>188 — CVV, apoio emocional, 24 horas</li>
+    </ul>
+    <button id="alert-x" type="button">Fechar</button>
+  </section>
+
+  <section id="p-chat" class="panel" hidden>
+    <div id="log" class="log"></div>
+    <div id="chips" class="chips"></div>
+    <form id="ask" class="row" autocomplete="off">
+      <input id="q" type="text" maxlength="200" placeholder="Escreva sua pergunta" aria-label="Sua pergunta">
+      <button id="send" type="submit">Enviar</button>
+    </form>
+    <p id="chatnote" class="note"></p>
+  </section>
+
+  <section id="p-read" class="panel" hidden>
+    <p class="note">Toque em <b>Ler para mim</b> para ouvir a história. Toque numa palavra para ouvir as sílabas.</p>
+    <p id="story" class="story"></p>
+    <div class="btns2">
+      <button id="s-play" type="button">Ler para mim</button>
+      <button id="s-slow" type="button">Mais devagar</button>
+      <button id="s-stop" type="button" class="ghost">Parar</button>
+    </div>
+  </section>
+
+  <section id="p-parents" class="panel" hidden>
+    <div id="gate" class="gate">
+      <p class="note">Para abrir a área dos pais, <b>segure o botão</b> por 3 segundos.</p>
+      <button id="hold" class="hold" type="button"><i id="bar"></i><span>Segurar para abrir</span></button>
+    </div>
+    <div id="pcontrols" hidden>
+      <label class="setting consent"><span>Autorizo enviar as perguntas do Enrico para a IA. Nome, escola e diagnóstico não são enviados.</span><input id="consent" type="checkbox"></label>
+      <label class="setting"><span>Usar IA (precisa de internet)</span><input id="ai" type="checkbox" disabled></label>
+      <p id="aihint" class="note"></p>
+      <p class="note">Temas que a IA responde: ciência simples (céu, plantas, corpo, animais), histórias, leitura e escrita, brincadeiras, emoções e calma. Outros assuntos vão para a caixa de perguntas.</p>
+      <label class="setting"><span>Limite de tempo por dia</span>
+        <select id="limit"><option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select>
+      </label>
+      <p class="note">Tempo de hoje: <b id="today">0</b> min</p>
+      <h2>Perguntas sem resposta</h2>
+      <ul id="qs" class="qs"></ul>
+      <div class="btns2">
+        <button id="copy" type="button" class="ghost">Copiar dados</button>
+        <button id="wipe" type="button" class="danger">Apagar tudo</button>
+      </div>
+      <textarea id="dump" class="dump" readonly hidden></textarea>
+    </div>
+  </section>
+
+  <p class="note">Conversas não são guardadas. Só as perguntas sem resposta ficam salvas neste aparelho.</p>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const KEY = 'trilha-enrico-v1';
+const INTRO = 'Oi! Eu sou o Enrico, um programa de computador para ler e aprender com você. Quer ouvir uma história?';
+const OFFTOPIC_MSG = 'Esse assunto eu não posso explicar aqui. Vou guardar a pergunta para os adultos de casa responderem.';
+const BANK = [
+  {k:['ceu'], q:'Por que o céu é azul?', a:'O sol manda luz de todas as cores. O ar espalha mais a cor azul, por isso o céu parece azul para a gente!'},
+  {k:['dorm','sono'], q:'Por que a gente dorme?', a:'Quando você dorme, o corpo descansa. O cérebro também guarda o que você aprendeu no dia.'},
+  {k:['vulcao'], q:'O que é um vulcão?', a:'É uma montanha que solta fogo, pedra e fumaça quando há muito calor dentro da Terra.'},
+  {k:['folha','outono'], q:'Por que as folhas caem?', a:'No outono, as árvores soltam as folhas velhas. Depois nascem folhas novas.'},
+  {k:['planta','semente'], q:'Como uma planta cresce?', a:'A semente precisa de terra, água e luz do sol. Aos poucos ela cresce e vira uma planta.'},
+  {k:['calm','respir','nervos','ansios'], q:'Como eu fico calmo?', a:'Puxe o ar pelo nariz contando até três. Solte o ar devagar pela boca, como um dragão soltando bolhas. Pode repetir!'},
+  {k:['dinossauro'], q:'O que é um dinossauro?', a:'Dinossauros são bichos que viveram há milhões de anos. Uns comiam plantas e outros comiam carne!'},
+  {k:['arco'], q:'O que é arco-íris?', a:'Depois da chuva, o sol brilha nas gotinhas de água e a luz se espalha em cores. Isso é um arco-íris!'},
+  {k:['palavra'], q:'O que é uma palavra?', a:'Palavra é um grupo de letras que tem um sentido. Por exemplo: BOLA, GATO e SOL.'},
+  {k:['letra'], q:'O que é uma letra?', a:'Cada letra tem um som. Por exemplo, o B faz o som de bê, como em BOLA.'},
+  {k:['pessoa','robo','humano'], q:'Você é uma pessoa?', a:'Não sou uma pessoa. Sou um programa de computador feito para ajudar você a ler e aprender.'},
+  {k:['quantos anos voce'], q:'Quantos anos você tem?', a:'Eu não tenho idade como você. Sou o Enrico, seu parceiro de leitura!'},
+  {k:['brasil'], q:'Quem descobriu o Brasil?', a:'Os povos indígenas já viviam aqui. Em 1500, os portugueses chegaram, liderados por Pedro Álvares Cabral.'},
+  {k:['medo'], q:'O que eu faço quando sinto medo?', a:'Medo é um aviso do corpo. Se sentir medo, conte para um adulto de confiança. Respirar devagar também ajuda.'},
+  {k:['soma','dois mais dois'], q:'Quanto é dois mais dois?', a:'Dois mais dois é igual a quatro!'},
+  {k:['livro','leitura','historia'], q:'Como faço para gostar de ler?', a:'Escolha um livro que tenha desenhos. Eu leio com você, uma frase de cada vez. Ler é descobrir histórias!'}
+];
+const STORY = 'O dragão Sopro estava triste. Ele tinha esquecido como soltar bolhas. Então ele respirou devagar, contando até três. Puxou o ar pelo nariz e soltou pela boca. Bloop! Apareceu uma bolha grande e colorida. Sopro sorriu e foi brincar.';
+const SYL = {dragão:'dra-gão', sopro:'so-pro', triste:'tris-te', esquecido:'es-que-ci-do', respirou:'res-pi-rou',
+  devagar:'de-va-gar', contando:'con-tan-do', nariz:'na-riz', soltou:'sol-tou', bolha:'bo-lha',
+  colorida:'co-lo-ri-da', sorriu:'sor-riu', brincar:'brin-car'};
+const RISK_RE = /(machuc|me bate|bateu em mim|me toc|abus|segredo|sangue|\barmas?\b|me matar|quero morrer|suicid|veneno|remedio|nao conte|nao conta|nao pode contar|ninguem pode saber)/;
+const SUGGEST = BANK.slice(0, 8).map(b => b.q);
+
+const defaults = () => ({aiOn:false, consent:false, limit:30, minutes:{}, questions:[]});
+let state = load();
+let bubbleText = '', bubbleSpans = [], finishSpeech = null, speakId = 0;
+let unlocked = false, holdT = null, wipeArmed = false, overShown = false;
+
+function load(){
+  try{ return Object.assign(defaults(), JSON.parse(localStorage.getItem(KEY)) || {}); }
+  catch(e){ return defaults(); }
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function today(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const isRisk = t => RISK_RE.test(norm(t));
+function matchBank(q){
+  const n = norm(q); let best = null, score = 0;
+  for(const b of BANK){
+    const s = b.k.filter(k => n.includes(k)).length;
+    if(s > score){ score = s; best = b; }
+  }
+  return best;
+}
+
+/* ---------- Voz ---------- */
+function pickVoice(){
+  const vs = ('speechSynthesis' in window) ? speechSynthesis.getVoices() : [];
+  return vs.find(v => /^pt[-_]BR/i.test(v.lang)) || vs.find(v => /^pt/i.test(v.lang)) || null;
+}
+function setTalking(on){ $('enrico').classList.toggle('talking', on); }
+function stopSpeech(){
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+  if(finishSpeech){ finishSpeech(); finishSpeech = null; }
+}
+function renderWords(el, text, clickable){
+  el.textContent = '';
+  const spans = [], re = /\S+/g; let last = 0, m;
+  while((m = re.exec(text))){
+    if(m.index > last) el.appendChild(document.createTextNode(text.slice(last, m.index)));
+    const s = document.createElement('span');
+    s.className = 'w'; s.textContent = m[0];
+    if(clickable){ s.tabIndex = 0; s.onclick = () => sylWord(m[0]); s.onkeydown = e => { if(e.key === 'Enter') sylWord(m[0]); }; }
+    el.appendChild(s);
+    spans.push({el:s, start:m.index, end:m.index + m[0].length});
+    last = m.index + m[0].length;
+  }
+  if(last < text.length) el.appendChild(document.createTextNode(text.slice(last)));
+  return spans;
+}
+function speak(text, spans, rate){
+  stopSpeech();
+  rate = rate || 1;
+  if(!('speechSynthesis' in window)){ setNote('chatnote', 'Este aparelho não tem voz. O texto aparece na tela.'); return; }
+  const voice = pickVoice();
+  if(!voice && speechSynthesis.getVoices().length > 0) setNote('chatnote', 'Não encontrei voz em português neste aparelho. O texto aparece na tela.');
+  const id = ++speakId;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'pt-BR'; u.rate = rate; if(voice) u.voice = voice;
+  let gotBoundary = false, idx = 0, iv = null;
+  const hl = i => { spans.forEach(s => s.el.classList.remove('on')); if(spans[i]) spans[i].el.classList.add('on'); };
+  u.onstart = () => setTalking(true);
+  u.onboundary = e => {
+    if(e.name && e.name !== 'word') return;
+    gotBoundary = true; clearInterval(iv);
+    const k = spans.findIndex(s => e.charIndex >= s.start && e.charIndex < s.end);
+    if(k >= 0) hl(k);
+  };
+  // Se o navegador não avisa cada palavra, o destaque segue um ritmo estimado.
+  const t0 = setTimeout(() => {
+    if(gotBoundary) return;
+    iv = setInterval(() => { if(idx < spans.length) hl(idx); idx++; }, 380 / rate);
+  }, 500);
+  const finish = () => {
+    clearTimeout(t0); clearInterval(iv);
+    if(id === speakId){ spans.forEach(s => s.el.classList.remove('on')); setTalking(false); }
+  };
+  u.onend = finish; u.onerror = finish;
+  finishSpeech = finish;
+  speechSynthesis.speak(u);
+}
+function sylWord(w){
+  const key = w.replace(/[.,!?;:"“”()—]/g, '').toLowerCase();
+  const parts = SYL[key];
+  speak(parts ? parts.replace(/-/g, ' ... ') + ' ... ' + key : key, []);
+}
+
+/* ---------- Bolha e chat ---------- */
+function showBubble(text){ bubbleText = text; bubbleSpans = renderWords($('bubble'), text, false); }
+function reply(a){
+  stopSpeech();
+  addMsg('bot', a);
+  showBubble(a);
+  speak(a, bubbleSpans);
+}
+function addMsg(who, text){
+  const d = document.createElement('div');
+  d.className = 'msg ' + who; d.textContent = text;
+  $('log').appendChild(d);
+  $('log').scrollTop = $('log').scrollHeight;
+}
+function setNote(id, text){ $(id).textContent = text; }
+function showAlert(){ $('alert').hidden = false; $('alert').scrollIntoView({block:'nearest'}); }
+
+// Pergunta à IA pelo servidor (api/ask.js). A chave da IA nunca fica no aparelho.
+async function askAI(q){
+  setNote('chatnote', 'Pensando...');
+  try{
+    const r = await fetch('/api/ask', {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({question:q})});
+    setNote('chatnote', '');
+    if(r.status === 429) return {limit:true};
+    if(!r.ok) return null;
+    const d = await r.json();
+    if(d.offtopic) return {offtopic:true};
+    if(d.answer && !isRisk(d.answer)) return {answer:d.answer};
+    return null;
+  }catch(e){ setNote('chatnote', ''); return null; }
+}
+async function ask(q){
+  addMsg('child', q);
+  if(isRisk(q)){
+    stopSpeech();
+    showAlert();
+    return reply('Vou chamar um adulto para ajudar você. Fale com a mamãe ou com o papai agora.');
+  }
+  let a = null;
+  if(state.aiOn){
+    if(!navigator.onLine){
+      setNote('chatnote', 'Sem internet agora. Usei as respostas que estão no aparelho.');
+    }else{
+      showBubble('Hmm, deixa eu pensar...');
+      const r = await askAI(q);
+      if(r && r.limit) return reply('Já usamos as perguntas de hoje. Pergunte de novo amanhã ou peça para um adulto.');
+      if(r && r.offtopic){ addQuestion(q); return reply(OFFTOPIC_MSG); }
+      if(r && r.answer) a = r.answer;
+    }
+  }
+  if(!a){ const hit = matchBank(q); if(hit) a = hit.a; }
+  if(!a){
+    a = 'Boa pergunta! Eu ainda não sei essa. Vou guardar para os adultos de casa responderem.';
+    addQuestion(q);
+  }
+  reply(a);
+}
+function addQuestion(q){
+  if(state.questions.some(x => x.q === q && x.d === today())) return;
+  state.questions.unshift({q: q.slice(0, 200), d: today()});
+  state.questions = state.questions.slice(0, 50);
+  save();
+  if(!$('p-parents').hidden) renderParents();
+}
+
+/* ---------- Área dos pais ---------- */
+function setAi(on){
+  state.aiOn = !!(on && state.consent);
+  save();
+  $('ai').checked = state.aiOn;
+  $('ai').disabled = !state.consent;
+  $('aihint').textContent = state.aiOn
+    ? 'Ligada. Só a pergunta vai para a IA, sem nome, escola ou diagnóstico.'
+    : (state.consent ? 'Desligada. O Enrico usa só as respostas guardadas no aparelho.'
+                     : 'Marque a autorização acima para poder ligar a IA.');
+}
+function renderParents(){
+  $('consent').checked = state.consent;
+  setAi(state.aiOn);
+  $('limit').value = String(state.limit);
+  $('today').textContent = state.minutes[today()] || 0;
+  const ul = $('qs'); ul.textContent = '';
+  if(!state.questions.length){
+    const li = document.createElement('li'); li.textContent = 'Nenhuma pergunta por enquanto.'; ul.appendChild(li);
+  }
+  state.questions.forEach((it, i) => {
+    const li = document.createElement('li');
+    const s = document.createElement('span'); s.textContent = it.q + ' (' + it.d + ')';
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = 'Vista';
+    b.onclick = () => { state.questions.splice(i, 1); save(); renderParents(); };
+    li.append(s, b); ul.appendChild(li);
+  });
+}
+function holdStart(){
+  if(unlocked) return;
+  const bar = $('bar');
+  bar.style.transition = 'width 3s linear'; bar.style.width = '100%';
+  holdT = setTimeout(() => {
+    unlocked = true;
+    $('gate').hidden = true; $('pcontrols').hidden = false;
+    renderParents();
+  }, 3000);
+}
+function holdEnd(){
+  if(unlocked) return;
+  clearTimeout(holdT); holdT = null;
+  const bar = $('bar');
+  bar.style.transition = 'none'; bar.style.width = '0';
+}
+function checkLimit(){
+  const used = state.minutes[today()] || 0;
+  const over = used >= state.limit;
+  ['b-chat','b-read','send'].forEach(id => { $(id).disabled = over; });
+  $('q').disabled = over;
+  document.querySelectorAll('#chips button').forEach(b => { b.disabled = over; });
+  $('today').textContent = used;
+  if(over && !overShown){
+    overShown = true;
+    showBubble('Hoje já foi um bom tempo de aprender! Vamos descansar. Amanhã a gente continua.');
+  }
+  if(!over) overShown = false;
+}
+function tick(){
+  if(document.visibilityState !== 'visible') return;
+  const t = today();
+  state.minutes[t] = (state.minutes[t] || 0) + 1;
+  save(); checkLimit();
+}
+function netState(){
+  const on = navigator.onLine;
+  $('net').textContent = on ? 'Online' : 'Sem internet';
+  $('net').classList.toggle('off', !on);
+}
+function setPanel(name){
+  ['chat','read','parents'].forEach(n => { $('p-' + n).hidden = (n !== name); });
+  $('p-' + name).scrollIntoView({block:'nearest'});
+}
+
+/* ---------- Ligações ---------- */
+$('b-listen').onclick = () => speak(bubbleText, bubbleSpans);
+$('b-chat').onclick = () => setPanel('chat');
+$('b-read').onclick = () => setPanel('read');
+$('b-parents').onclick = () => setPanel('parents');
+$('alert-x').onclick = () => { $('alert').hidden = true; };
+$('ask').onsubmit = e => {
+  e.preventDefault();
+  const v = $('q').value.trim();
+  if(!v) return;
+  $('q').value = '';
+  ask(v.slice(0, 200));
+};
+$('s-play').onclick = () => speak(STORY, storySpans, 0.95);
+$('s-slow').onclick = () => speak(STORY, storySpans, 0.7);
+$('s-stop').onclick = () => stopSpeech();
+const hold = $('hold');
+hold.onpointerdown = holdStart;
+hold.onpointerup = holdEnd;
+hold.onpointerleave = holdEnd;
+hold.onpointercancel = holdEnd;
+$('consent').onchange = e => {
+  state.consent = e.target.checked;
+  if(!state.consent) state.aiOn = false;
+  save(); setAi(state.aiOn);
+};
+$('ai').onchange = e => setAi(e.target.checked);
+$('limit').onchange = e => { state.limit = +e.target.value; save(); checkLimit(); };
+$('copy').onclick = async () => {
+  const txt = JSON.stringify({questions: state.questions, minutes: state.minutes, limit: state.limit}, null, 2);
+  try{
+    await navigator.clipboard.writeText(txt);
+    $('copy').textContent = 'Copiado!';
+    setTimeout(() => { $('copy').textContent = 'Copiar dados'; }, 1800);
+  }catch(e){
+    const d = $('dump'); d.value = txt; d.hidden = false; d.focus(); d.select();
+  }
+};
+$('wipe').onclick = () => {
+  if(!wipeArmed){
+    wipeArmed = true; $('wipe').textContent = 'Toque de novo para apagar tudo';
+    return;
+  }
+  wipeArmed = false; $('wipe').textContent = 'Apagar tudo';
+  state = defaults(); save();
+  $('dump').hidden = true;
+  renderParents(); checkLimit();
+};
+addEventListener('online', netState);
+addEventListener('offline', netState);
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') checkLimit(); });
+
+/* ---------- Início ---------- */
+let storySpans = renderWords($('story'), STORY, true);
+showBubble(INTRO);
+SUGGEST.forEach(t => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'chip'; b.textContent = t;
+  b.onclick = () => { setPanel('chat'); ask(t); };
+  $('chips').appendChild(b);
+});
+netState();
+checkLimit();
+setInterval(tick, 60000);
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+</script>
